@@ -885,6 +885,9 @@
       <p class="tot-note">Delivery fee isn’t included. We’ll send you the total with the fee once we confirm.</p>
       <label>Delivery or pickup?</label>
       <div class="seg"><button type="button" id="svD" class="on">Delivery</button><button type="button" id="svP">Pickup</button></div>
+      <label>How would you like to pay?</label>
+      <div class="seg"><button type="button" id="pyC" class="on">Cash</button><button type="button" id="pyG">GCash</button></div>
+      <p class="tot-note" id="pyNote" style="margin:6px 0 0"></p>
       <label for="fN">Your name</label><input id="fN" autocomplete="name">
       <label for="fP">Mobile number</label><input id="fP" type="tel" inputmode="tel" autocomplete="tel" placeholder="09xx xxx xxxx">
       <div id="addrW"><label for="fA">Delivery address</label><textarea id="fA" rows="2" autocomplete="street-address"></textarea></div>
@@ -1135,7 +1138,7 @@
 
   // drawer
   const $ = id => document.getElementById(id);
-  let svc = 'delivery', busy = false, sent = false;
+  let svc = 'delivery', pay = 'cash', busy = false, sent = false;
   function openDr() { drawLines(); $('ov').classList.add('open'); $('drawer').classList.add('open'); $('drawer').setAttribute('aria-hidden', 'false'); }
   function closeDr() { $('ov').classList.remove('open'); $('drawer').classList.remove('open'); $('drawer').setAttribute('aria-hidden', 'true'); }
   $('cartBtn').addEventListener('click', openDr);
@@ -1169,6 +1172,13 @@
     $('addrW').style.display = v === 'delivery' ? '' : 'none';
   }
   $('svD').onclick = () => setSvc('delivery'); $('svP').onclick = () => setSvc('pickup');
+  function setPay(v) {
+    pay = v; $('pyC').classList.toggle('on', v === 'cash'); $('pyG').classList.toggle('on', v === 'gcash');
+    $('pyNote').textContent = v === 'gcash'
+      ? 'Nothing to pay now. Once we confirm your total, we’ll message you our GCash details.'
+      : 'Pay in cash when you receive your order.';
+  }
+  $('pyC').onclick = () => setPay('cash'); $('pyG').onclick = () => setPay('gcash');
 
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1179,7 +1189,7 @@
 
   function orderText(f) {
     const lines = Object.keys(basket).map(k => `${basket[k]} × ${MENU[k].n}`).join('\n');
-    return `Hi Patty Burps! I’d like to order:\n${lines}\nTotal: ${peso(moneyTotal())} (before delivery fee)\n${svc === 'delivery' ? 'Delivery to: ' + f.addr : 'Pickup'}\nWhen: ${f.when}\nName: ${f.name}\nMobile: ${f.phone}${f.msg ? '\nNote: ' + f.msg : ''}`;
+    return `Hi Patty Burps! I’d like to order:\n${lines}\nTotal: ${peso(moneyTotal())} (before delivery fee)\n${svc === 'delivery' ? 'Delivery to: ' + f.addr : 'Pickup'}\nWhen: ${f.when}\nName: ${f.name}\nPayment: ${pay === 'gcash' ? 'GCash' : 'Cash'}\nMobile: ${f.phone}${f.msg ? '\nNote: ' + f.msg : ''}`;
   }
   function showRes(kind, html) { $('res').innerHTML = `<div class="res ${kind}">${html}</div>`; }
   async function copyText(t) {
@@ -1207,7 +1217,7 @@
     try {
       const items = Object.keys(basket).map(k => ({ id: k, n: MENU[k].n, q: basket[k] }));
       await hub('rpc/create_inquiry', { method: 'POST', body: JSON.stringify({ p: {
-        name: f.name, phone: f.phone, kind: 'order', items, svc, addr: svc === 'delivery' ? f.addr : '', when: f.when, msg: f.msg, hp: $('fH').value } }) });
+        name: f.name, phone: f.phone, kind: 'order', items, svc, addr: svc === 'delivery' ? f.addr : '', when: f.when, msg: ('Payment: ' + (pay === 'gcash' ? 'GCash' : 'Cash') + (f.msg ? '\n' + f.msg : '')), pay_method: pay, hp: $('fH').value } }) });
       basket = {}; saveBasket(); badge(false); sent = true; $('res').innerHTML = '';
       ['fN', 'fP', 'fA', 'fW', 'fM'].forEach(i => $(i).value = '');
     } catch (e) {
@@ -1228,7 +1238,7 @@
     } catch (x) { msg.textContent = 'Couldn’t sign you up just now. Please try again later.'; }
   });
 
-  setSvc('delivery'); paintMenu(); loadMenu();
+  setSvc('delivery'); setPay('cash'); paintMenu(); loadMenu();
 
   // FAQ accordion
   document.querySelectorAll('.faq-item').forEach(item => {
