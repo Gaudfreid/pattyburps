@@ -188,7 +188,7 @@ select.field{appearance:auto}.field.bad{border-color:#e97882;box-shadow:0 0 0 3p
 @media(max-width:620px){.page.narrow,.page{width:min(100% - 28px,620px)}.panel{padding:18px;border-radius:20px}.cart-row{grid-template-columns:64px 1fr auto;gap:10px}.cart-row img{width:64px;height:64px}.cart-row .line-total{grid-column:2/4;text-align:right}.stepper li{padding:9px;gap:6px;font-size:.72rem;flex-direction:column;text-align:center}.stepper .dot{width:24px;height:24px}.grid2{grid-template-columns:1fr}.refbox b{font-size:1.5rem}.nav-btns .btn{flex:1}.trk-head{flex-direction:column}}
 
 /* ===== Out & About: pop-up event journal ===== */
-.gcb{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.gcb img{width:170px;max-width:100%;border-radius:14px;border:1px solid var(--line);background:#fff}.gcb span{display:block;font-size:.75rem;opacity:.75;margin-top:6px}.gcb b{font-size:1.15rem}
+.pfx{margin-top:12px;padding:14px 15px;border-radius:16px;border:1.5px dashed var(--line);background:var(--paper)}.pfx h3{font-size:1rem;margin:0 0 4px;color:var(--navy)}.pfx p{margin:4px 0 10px;font-size:.86rem;color:var(--muted);line-height:1.5}.pfx .pf-ok{padding:10px 12px;border-radius:12px;background:#e8f3df;color:#2f5a1f;font-weight:700;font-size:.88rem;line-height:1.5}.pfx .pf-bad{color:#a83d4b;font-weight:700;font-size:.86rem;margin-top:8px}.pfx .pf-msg{font-size:.86rem;margin-top:8px;color:var(--muted)}.pfx img.pf-pre{display:block;max-width:100%;max-height:260px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:#fff}.pfx .pf-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pfx input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.gcb{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.gcb img{width:170px;max-width:100%;border-radius:14px;border:1px solid var(--line);background:#fff}.gcb span{display:block;font-size:.75rem;opacity:.75;margin-top:6px}.gcb b{font-size:1.15rem}
 .sbar{background:var(--navy);color:#fff;text-align:center;padding:9px 16px;font-size:.88rem;font-weight:700}.sbar.warn{background:var(--yellow);color:var(--navy)}.sbar a{color:inherit;text-decoration:underline;margin-left:6px}
 #popups[hidden],[data-popnav][hidden]{display:none!important}
 .popups-section{padding-top:clamp(42px,6vw,76px);padding-bottom:clamp(42px,6vw,76px)}
@@ -594,9 +594,10 @@ function trackResult(o){
   const del=o.svc==="delivery",sub=+o.subtotal||0,fee=del?+o.fee||0:0,quoted=o.st!=="new";
   const first=esc(String(o.name||"").split(" ")[0]);
   let pay="";
-  if(o.pay==="gcash"&&["quoted"].includes(o.st)){const g=o.gc?{n:o.gc.n||"",nm:o.gc.nm||"",q:o.gc.q||""}:{},tot=peso(sub+fee);pay=(g.n||g.q)?`<div class="notice">💬 <b>Pay with GCash.</b> Please send <b>${tot}</b>, then reply to us with a screenshot so we can mark it as paid.<div class="gcb">${g.q?`<img src="${esc(CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/public/payment-qr/"+g.q)}" alt="GCash QR code">`:""}<div>${g.n?`<span>GCash number</span><b>${esc(g.n)}</b>`:""}${g.nm?`<span>Account name</span><b>${esc(g.nm)}</b>`:""}</div></div></div>`:`<div class="notice">💬 <b>Payment:</b> we’ve messaged you our GCash details. Please send payment and reply with a screenshot so we can mark it as paid.</div>`}
+  if(o.pay==="gcash"&&["quoted"].includes(o.st)){const g=o.gc?{n:o.gc.n||"",nm:o.gc.nm||"",q:o.gc.q||""}:{},tot=peso(sub+fee);pay=(g.n||g.q)?`<div class="notice">💬 <b>Pay with GCash.</b> Please send <b>${tot}</b>, then upload your payment screenshot below so we can mark it as paid.<div class="gcb">${g.q?`<img src="${esc(CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/public/payment-qr/"+g.q)}" alt="GCash QR code">`:""}<div>${g.n?`<span>GCash number</span><b>${esc(g.n)}</b>`:""}${g.nm?`<span>Account name</span><b>${esc(g.nm)}</b>`:""}</div></div></div>`:`<div class="notice">💬 <b>Payment:</b> we’ve messaged you our GCash details. Please send payment, then upload your payment screenshot below so we can mark it as paid.</div>`}
   else if(o.pay==="gcash"&&o.st==="new")pay=`<div class="notice">GCash: we’ll message you our GCash details once we confirm your total.</div>`;
   else if(o.pay==="cash"&&o.st!=="done")pay=`<div class="notice">💵 Pay in cash when you ${del?"receive":"pick up"} your order.</div>`;
+  if(o.pay==="gcash"&&o.st==="quoted")pay+=`<div class="pfx" id="pfBox"></div>`;
   const when=new Date(o.created_at);
   return `<div class="panel trk"><div class="trk-head"><div><span class="kicker">Order</span><h2>${esc(o.ref)}</h2><p class="mut">Hi ${first}! Placed ${isNaN(when)?"":when.toLocaleDateString("en-PH",{month:"short",day:"numeric"})+", "+when.toLocaleTimeString("en-PH",{hour:"numeric",minute:"2-digit"})}</p></div><span class="stat-pill ${o.st==="cancelled"?"bad":o.st==="done"?"ok":""}">${o.st==="cancelled"?"Cancelled":(STEPS[o.st]||STEPS.new).t.replace("Preparing your order","Preparing")}</span></div>
   ${timeline(o)}${pay}
@@ -631,7 +632,7 @@ async function doTrack(auto){
     const o=await hub("rpc/track_order",{method:"POST",body:JSON.stringify({p_ref:ref,p_phone:phone})});
     if(!o){clearInterval(trkTimer);if(auto)return;$("trkOut").innerHTML=`<div class="notice bad">We couldn’t find that order. Please check the order number and the mobile number you used when ordering.</div>`}
     else{
-      trk={ref,phone};$("trkOut").innerHTML=trackResult(o);
+      trk={ref,phone};$("trkOut").innerHTML=trackResult(o);pfPaint(o);
       $("trkStamp").textContent="Updated "+new Date().toLocaleTimeString("en-PH",{hour:"numeric",minute:"2-digit"});
       $("trkRefresh").onclick=()=>doTrack(true);
       rememberOrder({ref:o.ref,phone,t:Date.now()});
@@ -639,6 +640,80 @@ async function doTrack(auto){
     }
   }catch(e){console.error("Tracking failed",e);if(!auto)$("trkOut").innerHTML=`<div class="notice bad">We couldn’t check your order just now. Please try again in a moment.</div>`;else if($("trkStamp"))$("trkStamp").textContent="Couldn’t refresh. Showing the last update."}
   if(go){go.disabled=false;go.textContent="Track order"}
+}
+
+/* ---------- PAYMENT SCREENSHOT (Phase 3) ---------- */
+const PFX={ref:"",at:null,n:0,loaded:false,blob:null,url:"",busy:false,msg:"",bad:false};
+const pfRef=r=>"PB-"+String(r||"").replace(/^PB-?/i,"").toUpperCase();
+function pfReset(){if(PFX.url)try{URL.revokeObjectURL(PFX.url)}catch(e){}PFX.blob=null;PFX.url=""}
+async function pfPrep(file){
+  let bm;
+  try{bm=await createImageBitmap(file)}catch(e){
+    bm=await new Promise((ok,no)=>{const im=new Image(),u=URL.createObjectURL(file);im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=()=>{URL.revokeObjectURL(u);no(new Error("img"))};im.src=u});
+  }
+  const w0=bm.width||bm.naturalWidth,h0=bm.height||bm.naturalHeight,k=Math.min(1,1600/Math.max(w0,h0));
+  const c=document.createElement("canvas");c.width=Math.max(1,Math.round(w0*k));c.height=Math.max(1,Math.round(h0*k));
+  const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0,c.width,c.height);
+  let b=await new Promise(r=>c.toBlob(w=>r(w),"image/webp",.85));
+  if(!b||b.type!=="image/webp")b=await new Promise(r=>c.toBlob(w=>r(w),"image/jpeg",.85));
+  if(!b)throw new Error("blob");
+  if(b.size>3*1024*1024)throw new Error("big");
+  return b;
+}
+function pfPaint(o){
+  const box=$("pfBox");if(!box||!o)return;
+  const ref=pfRef(o.ref);
+  if(PFX.ref!==ref){pfReset();Object.assign(PFX,{ref,at:null,n:0,loaded:false,busy:false,prep:false,msg:"",bad:false})}
+  if(!live()){box.remove();return}
+  if(!PFX.loaded&&!PFX.loading){
+    PFX.loading=true;
+    hub("rpc/proof_status",{method:"POST",body:JSON.stringify({p_ref:ref,p_phone:trk.phone})})
+      .then(r=>{if(r){PFX.at=r.at||null;PFX.n=+r.n||0}})
+      .catch(e=>console.warn("proof_status",e))
+      .finally(()=>{PFX.loaded=true;PFX.loading=false;if(PFX.ref===ref)pfPaint(o)});
+  }
+  const got=PFX.at?new Date(PFX.at):null,left=5-PFX.n;
+  let h="";
+  if(got&&!isNaN(got))h+=`<div class="pf-ok">✓ We received your screenshot (${got.toLocaleDateString("en-PH",{month:"short",day:"numeric"})}, ${got.toLocaleTimeString("en-PH",{hour:"numeric",minute:"2-digit"})}). We’ll mark your order as paid once we see the payment.</div>`;
+  if(left>0&&!PFX.busy&&!PFX.prep&&!PFX.blob){
+    h+=`<h3 style="margin-top:${got?"14px":"0"}">${got?"Need to send another?":"Send your payment screenshot"}</h3>${got?"":`<p>Take a screenshot of your GCash receipt, then choose it here. It goes only to Patty Burps.</p>`}<div class="pf-row"><label class="btn btn-ghost" for="pfFile" role="button" tabindex="0" id="pfPick">Choose screenshot</label><input id="pfFile" type="file" accept="image/*"></div>`;
+  }else if(left<=0){
+    h+=`<p>You’ve reached the upload limit for this order. Please send any more screenshots to us by message.</p>`;
+  }
+  if(PFX.blob){
+    h+=`<img class="pf-pre" src="${esc(PFX.url)}" alt="Your screenshot, ready to send"><div class="pf-row"><button class="btn btn-navy" type="button" id="pfSend" ${PFX.busy?"disabled":""}>${PFX.busy?"Sending…":"Send screenshot"}</button>${PFX.busy?"":`<button class="btn btn-ghost" type="button" id="pfCancel">Choose a different one</button>`}</div>`;
+  }
+  if(PFX.msg)h+=`<div class="${PFX.bad?"pf-bad":"pf-msg"}" role="alert">${esc(PFX.msg)}</div>`;
+  box.innerHTML=h;
+  const f=$("pfFile");
+  if(f)f.onchange=async()=>{
+    const file=f.files&&f.files[0];if(!file)return;
+    if(!/^image\//.test(file.type)){PFX.msg="Please choose a picture (a screenshot).";PFX.bad=true;return pfPaint(o)}
+    PFX.msg="Preparing…";PFX.bad=false;PFX.prep=true;pfPaint(o);
+    try{const b=await pfPrep(file);pfReset();PFX.blob=b;PFX.url=URL.createObjectURL(b);PFX.msg="";PFX.bad=false}
+    catch(e){PFX.msg=e&&e.message==="big"?"That picture is too large. Please choose a smaller screenshot.":"We couldn’t read that picture. Please try another screenshot.";PFX.bad=true}
+    PFX.prep=false;pfPaint(o);
+  };
+  const pk=$("pfPick");if(pk)pk.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("pfFile").click()}};
+  const sd=$("pfSend");if(sd)sd.onclick=()=>pfSend(o);
+  const cn=$("pfCancel");if(cn)cn.onclick=()=>{pfReset();PFX.msg="";pfPaint(o)};
+}
+async function pfSend(o){
+  if(!PFX.blob||PFX.busy)return;
+  const ref=PFX.ref,b=PFX.blob,ext=b.type==="image/webp"?"webp":"jpg";
+  const path=ref+"/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+"."+ext;
+  PFX.busy=true;PFX.msg="";PFX.bad=false;pfPaint(o);
+  try{
+    const up=await fetch(CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/payment-proofs/"+path,{method:"POST",headers:{apikey:CONFIG.key,Authorization:"Bearer "+CONFIG.key,"Content-Type":b.type},body:b});
+    if(!up.ok)throw new Error("upload "+up.status);
+    const r=await hub("rpc/attach_proof",{method:"POST",body:JSON.stringify({p_ref:ref,p_phone:trk.phone,p_path:path})});
+    PFX.at=(r&&r.at)||new Date().toISOString();PFX.n=r&&r.n!=null?+r.n:PFX.n+1;
+    pfReset();PFX.msg="";toast("Screenshot sent ✓");
+  }catch(e){
+    console.error("Screenshot upload failed",e);
+    PFX.msg="We couldn’t send your screenshot just now. Please try again, or send it to us by message instead.";PFX.bad=true;
+  }
+  PFX.busy=false;pfPaint(o);
 }
 
 /* ---------- router ---------- */
