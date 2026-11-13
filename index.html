@@ -188,7 +188,7 @@ select.field{appearance:auto}.field.bad{border-color:#e97882;box-shadow:0 0 0 3p
 @media(max-width:620px){.page.narrow,.page{width:min(100% - 28px,620px)}.panel{padding:18px;border-radius:20px}.cart-row{grid-template-columns:64px 1fr auto;gap:10px}.cart-row img{width:64px;height:64px}.cart-row .line-total{grid-column:2/4;text-align:right}.stepper li{padding:9px;gap:6px;font-size:.72rem;flex-direction:column;text-align:center}.stepper .dot{width:24px;height:24px}.grid2{grid-template-columns:1fr}.refbox b{font-size:1.5rem}.nav-btns .btn{flex:1}.trk-head{flex-direction:column}}
 
 /* ===== Out & About: pop-up event journal ===== */
-.pfx{margin-top:12px;padding:14px 15px;border-radius:16px;border:1.5px dashed var(--line);background:var(--paper)}.pfx h3{font-size:1rem;margin:0 0 4px;color:var(--navy)}.pfx p{margin:4px 0 10px;font-size:.86rem;color:var(--muted);line-height:1.5}.pfx .pf-ok{padding:10px 12px;border-radius:12px;background:#e8f3df;color:#2f5a1f;font-weight:700;font-size:.88rem;line-height:1.5}.pfx .pf-bad{color:#a83d4b;font-weight:700;font-size:.86rem;margin-top:8px}.pfx .pf-msg{font-size:.86rem;margin-top:8px;color:var(--muted)}.pfx img.pf-pre{display:block;max-width:100%;max-height:260px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:#fff}.pfx .pf-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pfx input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.gcb{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.gcb img{width:170px;max-width:100%;border-radius:14px;border:1px solid var(--line);background:#fff}.gcb span{display:block;font-size:.75rem;opacity:.75;margin-top:6px}.gcb b{font-size:1.15rem}
+.pfx{margin-top:12px;padding:14px 15px;border-radius:16px;border:1.5px dashed var(--line);background:var(--paper)}.pfx h3{font-size:1rem;margin:0 0 4px;color:var(--navy)}.pfx p{margin:4px 0 10px;font-size:.86rem;color:var(--muted);line-height:1.5}.pfx .pf-ok{padding:10px 12px;border-radius:12px;background:#e8f3df;color:#2f5a1f;font-weight:700;font-size:.88rem;line-height:1.5}.pfx .pf-bad{color:#a83d4b;font-weight:700;font-size:.86rem;margin-top:8px}.pfx .pf-msg{font-size:.86rem;margin-top:8px;color:var(--muted)}.pfx img.pf-pre{display:block;max-width:100%;max-height:260px;margin:10px 0;border-radius:12px;border:1px solid var(--line);background:#fff}.pfx .pf-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pfx input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.gcb .btn{margin:8px 8px 0 0;padding:8px 14px;font-size:.85rem}.gcb a{display:block}.gcb{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}.gcb img{width:170px;max-width:100%;border-radius:14px;border:1px solid var(--line);background:#fff}.gcb span{display:block;font-size:.75rem;opacity:.75;margin-top:6px}.gcb b{font-size:1.15rem}
 .sbar{background:var(--navy);color:#fff;text-align:center;padding:9px 16px;font-size:.88rem;font-weight:700}.sbar.warn{background:var(--yellow);color:var(--navy)}.sbar a{color:inherit;text-decoration:underline;margin-left:6px}
 #popups[hidden],[data-popnav][hidden]{display:none!important}
 .popups-section{padding-top:clamp(42px,6vw,76px);padding-bottom:clamp(42px,6vw,76px)}
@@ -209,6 +209,21 @@ select.field{appearance:auto}.field.bad{border-color:#e97882;box-shadow:0 0 0 3p
 @media(max-width:760px){.popups-feature{grid-template-columns:1fr}.popups-gallery{min-height:330px}}
 @media(max-width:480px){.popups-gallery{min-height:280px;gap:7px}.popups-photo{border-radius:14px}.popups-photo figcaption{font-size:.68rem;padding:7px}}
 
+
+/* ---- header refresh (mobile fix + modern look) ---- */
+.site-header{background:#fff9efd9;-webkit-backdrop-filter:saturate(1.4) blur(16px);backdrop-filter:saturate(1.4) blur(16px);padding-top:env(safe-area-inset-top,0px)}
+.nav{min-width:0}.brand{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.nav-links a{padding:8px 14px;border-radius:999px;transition:background .15s,color .15s}.nav-links a:hover,.nav-links a:focus-visible{background:#1c2f6a12;color:var(--navy)}
+.cart-button{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap}.cart-ic{width:20px;height:20px;flex:none}
+.menu-toggle{flex-shrink:0;line-height:1;transition:background .15s}.menu-toggle[aria-expanded="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+@media(max-width:720px){
+ .nav{gap:10px}.brand{font-size:1.32rem}
+ .nav-links{display:flex!important;top:calc(100% + 8px);left:12px;right:12px;padding:8px;gap:2px;background:#fffdf8;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 44px #1c2f6a29;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .18s,transform .18s,visibility .18s}
+ .nav-links.open{opacity:1;visibility:visible;transform:none}
+ .nav-links a{padding:14px 16px;border-radius:14px;font-size:1rem}
+}
+@media(max-width:420px){.cart-label{display:none}.cart-button{padding:9px 13px}.brand{font-size:1.2rem}.brand-mark{width:11px;height:11px}.nav-actions{gap:8px}}
+@media(max-width:340px){.brand{font-size:1.05rem}.menu-toggle{width:38px;height:38px}}
 </style>
 </head>
 <body>
@@ -219,8 +234,8 @@ select.field{appearance:auto}.field.bad{border-color:#e97882;box-shadow:0 0 0 3p
    <a href="#menu">Menu</a><a href="#story">Our Story</a><a href="#popups" data-popnav hidden>Pop-ups</a><a href="#ordering">How to Order</a><a href="#faq">FAQ</a><a href="#/track">Track order</a>
   </nav>
   <div class="nav-actions">
-   <a class="cart-button" id="cartBtn" href="#/cart" aria-label="Open your cart">Your cart <span class="cart-count" id="cartCount">0</span></a>
-   <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle navigation">☰</button>
+   <a class="cart-button" id="cartBtn" href="#/cart" aria-label="Open your cart"><svg class="cart-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8.5h14l-1.2 10.2a1.2 1.2 0 0 1-1.2 1.1H7.4a1.2 1.2 0 0 1-1.2-1.1L5 8.5z"/><path d="M9 8.5V7.5a3 3 0 0 1 6 0v1"/></svg><span class="cart-label">Your cart</span><span class="cart-count" id="cartCount">0</span></a>
+   <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">☰</button>
   </div>
  </div>
 </header>
@@ -471,7 +486,7 @@ function renderCheckout(){
     body=`<h2 tabindex="-1" id="stepHead">Review &amp; submit</h2><p class="sub">Check everything below, then submit your order.</p>
     <div class="rv"><div class="rv-h"><b>Contact</b><button class="link-btn" data-go="1" type="button">Edit</button></div><p>${esc(draft.name)}<br>${esc(draft.phone)}</p></div>
     <div class="rv"><div class="rv-h"><b>${del?"Delivery":"Pickup"}</b><button class="link-btn" data-go="2" type="button">Edit</button></div><p>${del?esc(draft.addr)+(draft.lmk?"<br><span class=mut>"+esc(draft.lmk)+"</span>":"")+"<br>":""}${esc(when)}</p></div>
-    <div class="rv"><div class="rv-h"><b>Payment</b><button class="link-btn" data-go="2" type="button">Edit</button></div><p>${draft.pay==="gcash"?"GCash":"Cash"} <span class="mut">· ${draft.pay==="gcash"?"nothing to pay now; we’ll message you our GCash details once we confirm your total":"pay in cash when you "+(del?"receive":"pick up")+" your order"}</span></p></div>
+    <div class="rv"><div class="rv-h"><b>Payment</b><button class="link-btn" data-go="2" type="button">Edit</button></div><p>${draft.pay==="gcash"?"GCash":"Cash"} <span class="mut">· ${draft.pay==="gcash"?(del?"nothing to pay now; we’ll confirm your delivery fee, then show you our GCash details":"you’ll see our GCash details right after you place your order"):"pay in cash when you "+(del?"receive":"pick up")+" your order"}</span></p></div>
     ${draft.note?`<div class="rv"><div class="rv-h"><b>Your note</b><button class="link-btn" data-go="2" type="button">Edit</button></div><p>${esc(draft.note)}</p></div>`:""}
     <div class="rv"><div class="rv-h"><b>Items</b><a class="link-btn" href="#/cart">Edit cart</a></div>${lineList()}</div>
     <div class="notice">You won’t be charged now. After you submit, we check availability and message you the final total${del?" and delivery fee":""}. You can follow your order any time with <b>Track order</b>.</div>
@@ -486,7 +501,7 @@ function renderCheckout(){
   const h=$("stepHead");if(h)h.focus({preventScroll:true});
   window.scrollTo({top:0,behavior:"auto"});
 }
-function setPayHelp(){const h=$("pyHelp");if(h)h.textContent=draft.pay==="gcash"?"Nothing to pay now. Once we confirm your order, we’ll message you our GCash details.":"Pay in cash when you receive your order. Nothing is due now."}
+function setPayHelp(){const h=$("pyHelp");if(h)h.textContent=draft.pay==="gcash"?(draft.svc==="pickup"?"Pickup has no delivery fee. Right after you place your order you’ll see our GCash details, so you can pay and upload your screenshot.":"Nothing to pay now. We’ll check your address and confirm your delivery fee, then show you our GCash details."):"Pay in cash when you receive your order. Nothing is due now."}
 function readStep(){
   if(step===1){draft.name=$("cName").value.trim();draft.phone=$("cPhone").value.trim()}
   if(step===2){draft.addr=$("cAddr")?$("cAddr").value.trim():draft.addr;draft.lmk=$("cLmk")?$("cLmk").value.trim():draft.lmk;draft.date=$("cDate").value;draft.slot=$("cSlot").value;draft.note=$("cNote").value.trim()}
@@ -557,10 +572,10 @@ function renderConfirmed(ref){
   <p class="sub" style="text-align:center">We’ve received your order and will confirm availability, ${o&&!del?"the total":"the total and delivery fee"}, shortly.</p>
   ${ref?`<div class="refbox"><span class="kicker">Your order number</span><b id="refTxt">${esc(ref)}</b><button class="btn btn-ghost sm" id="copyRef" type="button">Copy</button></div><p class="help" style="text-align:center">Keep this number. With your mobile number, it lets you follow your order.</p>`:""}
   ${o?`<div class="rv"><div class="rv-h"><b>${del?"Delivery":"Pickup"}</b></div><p>${del?esc(o.addr)+"<br>":""}${esc(o.when)}</p></div>
-  <div class="rv"><div class="rv-h"><b>Payment</b></div><p>${o.pay==="gcash"?"GCash · we’ll message you our GCash details once we confirm your total":"Cash · pay when you "+(del?"receive":"pick up")+" your order"}</p></div>
+  <div class="rv"><div class="rv-h"><b>Payment</b></div><p>${o.pay==="gcash"?(del?"GCash · we’ll confirm your delivery fee, then show you our GCash details":"GCash · pay now to reserve your order"):"Cash · pay when you "+(del?"receive":"pick up")+" your order"}</p></div>
   <div class="rv"><div class="rv-h"><b>Items</b></div>${o.items.map(i=>`<div class="mini-line"><div><b>${esc(i.n)}</b><small>${i.q} × ${peso(i.p)}</small></div><span>${peso(i.q*i.p)}</span></div>`).join("")}
   <div class="sum-row total" style="margin-top:8px"><span>Subtotal</span><b>${peso(o.subtotal)}</b></div><p class="help">${del?"Delivery fee":"Final total"} confirmed by Patty Burps.</p></div>`:""}
-  <h2 class="nx-h">What happens next</h2><ol class="next-list"><li><b>We review your order.</b> We check availability${del?" and your delivery location":""}.</li><li><b>We message you.</b> You’ll get the final total${del?", delivery fee":""} and how to pay. Please reply to confirm.</li><li><b>We prepare and ${del?"deliver":"get it ready"}.</b> Follow every step on the tracking page.</li></ol>
+  ${o&&o.pay==="gcash"&&!del?`<div class="notice">💳 <b>Next step: pay ${peso(o.subtotal||0)} by GCash</b> to reserve your order.<div style="margin-top:10px"><a class="btn btn-navy" href="#/track/${esc(ref)}">Pay now</a></div></div>`:""}<h2 class="nx-h">What happens next</h2><ol class="next-list"><li><b>We review your order.</b> We check availability${del?" and your delivery location":""}.</li>${o&&o.pay==="gcash"&&!del?`<li><b>You pay.</b> Send your GCash payment, then upload the screenshot on the tracking page. We’ll confirm once we see it.</li>`:`<li><b>We message you.</b> You’ll get the final total${del?", delivery fee":""} and how to pay. Please reply to confirm.</li>`}<li><b>We prepare and ${del?"deliver":"get it ready"}.</b> Follow every step on the tracking page.</li></ol>
   <div class="nav-btns center">${ref?`<a class="btn btn-navy" href="#/track/${esc(ref)}">Track my order</a>`:`<a class="btn btn-navy" href="#/track">Track an order</a>`}<a class="btn btn-ghost" href="#menu">Back to the menu</a></div></div></div>`;
   const c=$("copyRef");if(c)c.onclick=async()=>{const ok=await copyText(ref);c.textContent=ok?"Copied ✓":"Select and copy"};
 }
@@ -593,11 +608,11 @@ function timeline(o){
 function trackResult(o){
   const del=o.svc==="delivery",sub=+o.subtotal||0,fee=del?+o.fee||0:0,quoted=o.st!=="new";
   const first=esc(String(o.name||"").split(" ")[0]);
-  let pay="";
-  if(o.pay==="gcash"&&["quoted"].includes(o.st)){const g=o.gc?{n:o.gc.n||"",nm:o.gc.nm||"",q:o.gc.q||""}:{},tot=peso(sub+fee);pay=(g.n||g.q)?`<div class="notice">💬 <b>Pay with GCash.</b> Please send <b>${tot}</b>, then upload your payment screenshot below so we can mark it as paid.<div class="gcb">${g.q?`<img src="${esc(CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/public/payment-qr/"+g.q)}" alt="GCash QR code">`:""}<div>${g.n?`<span>GCash number</span><b>${esc(g.n)}</b>`:""}${g.nm?`<span>Account name</span><b>${esc(g.nm)}</b>`:""}</div></div></div>`:`<div class="notice">💬 <b>Payment:</b> we’ve messaged you our GCash details. Please send payment, then upload your payment screenshot below so we can mark it as paid.</div>`}
-  else if(o.pay==="gcash"&&o.st==="new")pay=`<div class="notice">GCash: we’ll message you our GCash details once we confirm your total.</div>`;
+  let pay="";const gcNow=o.pay==="gcash"&&(o.st==="quoted"||(o.svc==="pickup"&&o.st==="new"));
+  if(gcNow){const g=o.gc?{n:o.gc.n||"",nm:o.gc.nm||"",q:o.gc.q||""}:{},tot=peso(sub+fee);pay=(g.n||g.q)?`<div class="notice">💬 <b>Pay with GCash.</b> Please send <b>${tot}</b>, then upload your payment screenshot below so we can mark it as paid.${del?"":" If something turns out to be unavailable, we’ll message you and refund it."}<div class="gcb">${g.q?(qu=>`<div><a href="${esc(qu)}" target="_blank" rel="noopener" aria-label="Open the QR code full size"><img src="${esc(qu)}" alt="GCash QR code"></a><button class="btn btn-ghost" type="button" data-gc="save" data-u="${esc(qu)}">Save QR</button></div>`)(CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/public/payment-qr/"+g.q):""}<div>${g.n?`<span>GCash number</span><b>${esc(g.n)}</b>`:""}${g.nm?`<span>Account name</span><b>${esc(g.nm)}</b>`:""}${g.n?`<button class="btn btn-ghost" type="button" data-gc="copy" data-v="${esc(g.n)}">Copy number</button><button class="btn btn-navy" type="button" data-gc="open" data-v="${esc(g.n)}">Open GCash</button>`:""}</div></div><small class="mut" style="display:block;margin-top:8px">Tip: in GCash, tap Send Money, then QR, then Upload QR to use the saved picture.</small></div>`:`<div class="notice">💬 <b>Payment:</b> ${del?"we’ve messaged you our GCash details.":"we’ll message you our GCash details shortly."} Please send payment, then upload your payment screenshot below so we can mark it as paid.</div>`}
+  else if(o.pay==="gcash"&&o.st==="new")pay=`<div class="notice">GCash: we’ll check your address and send your delivery fee shortly. Our GCash details will appear here once it’s ready.</div>`;
   else if(o.pay==="cash"&&o.st!=="done")pay=`<div class="notice">💵 Pay in cash when you ${del?"receive":"pick up"} your order.</div>`;
-  if(o.pay==="gcash"&&o.st==="quoted")pay+=`<div class="pfx" id="pfBox"></div>`;
+  if(gcNow)pay+=`<div class="pfx" id="pfBox"></div>`;
   const when=new Date(o.created_at);
   return `<div class="panel trk"><div class="trk-head"><div><span class="kicker">Order</span><h2>${esc(o.ref)}</h2><p class="mut">Hi ${first}! Placed ${isNaN(when)?"":when.toLocaleDateString("en-PH",{month:"short",day:"numeric"})+", "+when.toLocaleTimeString("en-PH",{hour:"numeric",minute:"2-digit"})}</p></div><span class="stat-pill ${o.st==="cancelled"?"bad":o.st==="done"?"ok":""}">${o.st==="cancelled"?"Cancelled":(STEPS[o.st]||STEPS.new).t.replace("Preparing your order","Preparing")}</span></div>
   ${timeline(o)}${pay}
@@ -632,7 +647,9 @@ async function doTrack(auto){
     const o=await hub("rpc/track_order",{method:"POST",body:JSON.stringify({p_ref:ref,p_phone:phone})});
     if(!o){clearInterval(trkTimer);if(auto)return;$("trkOut").innerHTML=`<div class="notice bad">We couldn’t find that order. Please check the order number and the mobile number you used when ordering.</div>`}
     else{
-      trk={ref,phone};$("trkOut").innerHTML=trackResult(o);pfPaint(o);
+      trk={ref,phone};
+      if(o.pay==="gcash"&&o.svc==="pickup"&&o.st==="new"&&!o.gc){try{o.gc=await hub("rpc/pay_info",{method:"POST",body:JSON.stringify({p_ref:o.ref,p_phone:phone})})}catch(e){console.warn("pay_info",e)}}
+      $("trkOut").innerHTML=trackResult(o);pfPaint(o);
       $("trkStamp").textContent="Updated "+new Date().toLocaleTimeString("en-PH",{hour:"numeric",minute:"2-digit"});
       $("trkRefresh").onclick=()=>doTrack(true);
       rememberOrder({ref:o.ref,phone,t:Date.now()});
@@ -716,6 +733,17 @@ async function pfSend(o){
   PFX.busy=false;pfPaint(o);
 }
 
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-gc]");if(!b)return;const k=b.dataset.gc;
+  if(k==="copy"||k==="open"){const ok=await copyText(b.dataset.v);
+    if(k==="copy"){toast(ok?"GCash number copied ✓":"Couldn’t copy. Please type the number.");return}
+    toast(ok?"Number copied. Opening GCash…":"Opening GCash…");
+    setTimeout(()=>{if(document.visibilityState==="visible")toast("If GCash didn’t open, open the app and choose Send Money.")},1800);
+    location.href="gcash://";return}
+  if(k==="save"){const u=b.dataset.u;
+    try{const r=await fetch(u);if(!r.ok)throw 0;const bl=await r.blob(),a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="PattyBurps-GCash-QR."+(bl.type==="image/png"?"png":"webp");document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast("QR saved ✓")}
+    catch(x){window.open(u,"_blank","noopener");toast("Press and hold the picture to save it.")}}
+});
 /* ---------- router ---------- */
 function route(){
   clearInterval(trkTimer);$("toast").classList.remove("on");
@@ -750,8 +778,12 @@ $("appView").addEventListener("click",e=>{
   const c=e.target.closest(".chip");if(c){e.preventDefault();location.hash="#/track/"+c.textContent.trim()}
 });
 $("heroOrder").addEventListener("click",()=>{location.hash="#menu"});$("contactOrder").addEventListener("click",()=>{location.hash="#menu"});
-$("menuToggle").addEventListener("click",()=>$("navLinks").classList.toggle("open"));
-$("navLinks").querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>$("navLinks").classList.remove("open")));
+function navOpen(on){$("navLinks").classList.toggle("open",on);const m=$("menuToggle");m.setAttribute("aria-expanded",String(on));m.textContent=on?"✕":"☰"}
+$("menuToggle").addEventListener("click",()=>navOpen(!$("navLinks").classList.contains("open")));
+$("navLinks").querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>navOpen(false)));
+document.addEventListener("click",e=>{if($("navLinks").classList.contains("open")&&!e.target.closest(".site-header"))navOpen(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")navOpen(false)});
+window.addEventListener("hashchange",()=>navOpen(false));
 document.querySelectorAll(".faq-q").forEach(q=>q.addEventListener("click",()=>q.parentElement.classList.toggle("open")));
 $("newsletterForm").addEventListener("submit",async e=>{
  e.preventDefault();const email=$("newsletterEmail").value.trim(),msg=$("newsletterMessage");
