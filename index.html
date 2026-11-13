@@ -188,6 +188,7 @@ select.field{appearance:auto}.field.bad{border-color:#e97882;box-shadow:0 0 0 3p
 @media(max-width:620px){.page.narrow,.page{width:min(100% - 28px,620px)}.panel{padding:18px;border-radius:20px}.cart-row{grid-template-columns:64px 1fr auto;gap:10px}.cart-row img{width:64px;height:64px}.cart-row .line-total{grid-column:2/4;text-align:right}.stepper li{padding:9px;gap:6px;font-size:.72rem;flex-direction:column;text-align:center}.stepper .dot{width:24px;height:24px}.grid2{grid-template-columns:1fr}.refbox b{font-size:1.5rem}.nav-btns .btn{flex:1}.trk-head{flex-direction:column}}
 
 /* ===== Out & About: pop-up event journal ===== */
+.sbar{background:var(--navy);color:#fff;text-align:center;padding:9px 16px;font-size:.88rem;font-weight:700}.sbar.warn{background:var(--yellow);color:var(--navy)}.sbar a{color:inherit;text-decoration:underline;margin-left:6px}
 #popups[hidden],[data-popnav][hidden]{display:none!important}
 .popups-section{padding-top:clamp(42px,6vw,76px);padding-bottom:clamp(42px,6vw,76px)}
 .popups-feature{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:22px;align-items:stretch}
@@ -367,10 +368,10 @@ function paintMenu(){
  document.querySelectorAll("[data-price-for]").forEach(el=>{const m=MENU[el.dataset.priceFor];if(m)el.textContent=peso(m.p)});
  document.querySelectorAll(".add-button").forEach(btn=>{
   const m=MENU[btn.dataset.id];if(!m)return;
-  btn.disabled=!m.on;btn.setAttribute("aria-label",m.on?"Add "+m.n:"Sold out: "+m.n);
-  const old=btn.parentElement.querySelector(".sold");if(!m.on&&!old){const tag=document.createElement("span");tag.className="sold";tag.textContent="Sold out";btn.parentElement.insertBefore(tag,btn)}else if(m.on&&old)old.remove();
+  const un=isOff(btn.dataset.id),ok=m.on&&!un,lab=un?"Unavailable today":"Sold out";btn.disabled=!ok;btn.setAttribute("aria-label",ok?"Add "+m.n:lab+": "+m.n);
+  const old=btn.parentElement.querySelector(".sold");if(!ok){if(!old){const tag=document.createElement("span");tag.className="sold";btn.parentElement.insertBefore(tag,btn)}btn.parentElement.querySelector(".sold").textContent=lab}else if(old)old.remove();
  });
- Object.keys(basket).forEach(k=>{if(!MENU[k].on)delete basket[k]});
+ Object.keys(basket).forEach(k=>{if(!MENU[k].on||isOff(k))delete basket[k]});
  save();badge();refreshView();
 }
 document.addEventListener("click",e=>{const z=e.target.closest(".size");if(!z)return;const card=z.closest(".product-card"),btn=card.querySelector(".add-button"),pr=card.querySelector("[data-price-for]"),id=btn.dataset.base+z.dataset.size;card.querySelectorAll(".size").forEach(x=>{x.classList.toggle("on",x===z);x.setAttribute("aria-pressed",x===z?"true":"false")});btn.dataset.id=id;pr.dataset.priceFor=id;paintMenu()});
@@ -384,6 +385,7 @@ const SLOTS=["Morning (8am–12pm)","Afternoon (12pm–4pm)","Evening (4pm–8pm
 const save=()=>{try{localStorage.setItem("pb-basket",JSON.stringify(basket))}catch(e){}};
 const count=()=>Object.values(basket).reduce((a,b)=>a+b,0);
 const subtotal=()=>Object.keys(basket).reduce((a,k)=>a+basket[k]*MENU[k].p,0);
+const SET={paused:false,msg:"",off:[],up:null};const isOff=id=>SET.off.includes(String(id).replace(/12$/,""));
 const todayISO=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)};
 const niceDate=iso=>{try{return new Date(iso+"T00:00:00").toLocaleDateString("en-PH",{weekday:"short",month:"short",day:"numeric"})}catch(e){return iso}};
 const imgFor=k=>{const b=document.querySelector('.add-button[data-base="'+String(k).replace(/12$/,"")+'"]');const i=b&&b.closest(".product-card")&&b.closest(".product-card").querySelector("img");return i?i.src:""};
@@ -520,6 +522,7 @@ async function copyText(v){try{await navigator.clipboard.writeText(v);return tru
 function showErr(msg,extra){const m=$("err");m.innerHTML=msg+(extra||"");m.classList.remove("hidden")}
 async function submitOrder(){
   if(busy)return;
+  if(SET.paused)return showErr(esc(SET.msg||"We are not taking orders right now. Please check back soon."));
   const del=draft.svc==="delivery",text=messageText();
   if(!live()){const ok=await copyText(text);return showErr(ok?"Your order details were copied. Paste them into a message to Patty Burps. Nothing has been sent yet.":"Copy your order details below and send them to Patty Burps. Nothing has been sent yet.",`<textarea class="field" rows="7" readonly>${esc(text)}</textarea>`)}
   busy=true;const b=$("submit");b.disabled=true;b.textContent="Submitting…";$("err").classList.add("hidden");
@@ -689,7 +692,7 @@ paintMenu();loadMenu();route();
 const EVT={list:[],cur:null,photos:{},shown:24},LB={i:0,a:[]};
 const evImg=p=>CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/public/event-photos/"+p;
 const evDate=d=>{if(!d)return"";const x=new Date(d+"T00:00:00");return x.toLocaleDateString("en-PH",{month:"long",day:"numeric",year:x.getFullYear()===new Date().getFullYear()?undefined:"numeric"})};
-async function loadEvents(){if(!live())return;try{const rows=await hub("events?select=id,title,blurb,place,event_date,venue_url,cover&published=eq.true&order=event_date.desc.nullslast,created_at.desc&limit=24");if(!rows||!rows.length)return;EVT.list=rows;await showEvent(rows[0].id)}catch(e){console.warn("Could not load pop-up events; section stays hidden.",e)}}
+async function loadEvents(){if(!live())return;try{const rows=await hub("events?select=id,title,blurb,place,event_date,venue_url,cover&published=eq.true&order=event_date.desc.nullslast,created_at.desc&limit=24");if(!rows||!rows.length)return;EVT.list=rows;SET.up=rows.filter(e=>e.event_date&&e.event_date>=todayISO()).sort((a,b)=>a.event_date<b.event_date?-1:1)[0]||null;bars();await showEvent(rows[0].id)}catch(e){console.warn("Could not load pop-up events; section stays hidden.",e)}}
 async function showEvent(id){const ev=EVT.list.find(x=>x.id===id);if(!ev)return;if(!EVT.photos[id])EVT.photos[id]=await hub("event_photos?select=id,path,thumb,caption&event_id=eq."+id+"&order=sort.asc,created_at.asc&limit=500")||[];EVT.cur=ev;EVT.shown=24;paintEvent()}
 function paintEvent(){const ev=EVT.cur,ph=EVT.photos[ev.id]||[],sec=document.querySelector("#popups .popups-feature");if(!sec)return;LB.a=ph;$("popups").hidden=false;document.querySelectorAll("[data-popnav]").forEach(x=>x.hidden=false);
  const soon=ev.event_date&&ev.event_date>=todayISO(),url=/^https?:\/\//i.test(ev.venue_url||"")?ev.venue_url:(ev.place?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(ev.place):"");
@@ -707,6 +710,10 @@ document.body.insertAdjacentHTML("beforeend",'<div id="lb" class="lb" hidden rol
 document.addEventListener("click",e=>{const t=e.target;if(t.closest(".lb-x")||t.id==="lb")return lbHide();if(t.closest(".lb-p"))return lbShow(LB.i-1);if(t.closest(".lb-n"))return lbShow(LB.i+1);const f=t.closest("[data-ph]");if(f)return lbShow(+f.dataset.ph);const s=t.closest("[data-ev]");if(s)return showEvent(s.dataset.ev);if(t.id==="popups-more"){EVT.shown+=24;paintGrid()}});
 document.addEventListener("keydown",e=>{if($("lb").hidden){if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".popups-photo")){e.preventDefault();lbShow(+e.target.dataset.ph)}return}if(e.key==="Escape")lbHide();if(e.key==="ArrowLeft")lbShow(LB.i-1);if(e.key==="ArrowRight")lbShow(LB.i+1)});
 let lbx=0;$("lb").addEventListener("touchstart",e=>{lbx=e.touches[0].clientX},{passive:true});$("lb").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-lbx;if(Math.abs(d)>50)lbShow(LB.i+(d<0?1:-1))});
+function bars(){let b=$("sbars");if(!b){document.body.insertAdjacentHTML("afterbegin",'<div id="sbars"></div>');b=$("sbars")}
+ b.innerHTML=(SET.paused?'<div class="sbar warn" role="status">\u23F8 '+esc(SET.msg||"We are not taking orders right now. Please check back soon.")+'</div>':"")+(SET.up?'<div class="sbar" role="status">\uD83D\uDCCD Next pop-up: '+esc(SET.up.title)+" \u00B7 "+esc(evDate(SET.up.event_date))+(SET.up.place?" \u00B7 "+esc(SET.up.place):"")+'<a href="#popups">See details</a></div>':"")}
+async function loadSettings(){if(!live())return;try{const r=await hub("site_settings?select=paused,paused_msg,unavailable&id=eq.1");const x=r&&r[0];if(!x)return;SET.paused=!!x.paused;SET.msg=x.paused_msg||"";SET.off=Array.isArray(x.unavailable)?x.unavailable:[];bars();paintMenu()}catch(e){console.warn("Could not load site settings.",e)}}
+loadSettings();
 loadEvents();
 </script>
 </body>
