@@ -466,7 +466,7 @@ function cartClick(e){
 /* ---------- CHECKOUT ---------- */
 const PRE={blob:null,url:""};
 function closedMsg(){if(SET.paused)return SET.msg||"We are not taking orders right now. Please check back soon.";const q=sched();return q&&!q.open?q.msg+".":""}
-function dayShut(iso){const s=SET.sch;if(!s||!s.w)return false;const d=s.w[new Date(iso+"T00:00:00").getDay()];return (s.x||[]).includes(iso)||!!(d&&!d.on)}
+function dayShut(iso){const s=SET.sch;if(!s||!s.w||s.ov)return false;const d=s.w[new Date(iso+"T00:00:00").getDay()];return (s.x||[]).includes(iso)||!!(d&&!d.on)}
 function minDate(){if(!closedMsg())return todayISO();const d=new Date();d.setDate(d.getDate()+1);return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
 function payBlock(){const del=draft.svc==="delivery",tot=subtotal()+(del?SET.fee||0:0),g=SET.gc||{},qu=g.q?CONFIG.url.replace(/\/$/,"")+"/storage/v1/object/public/payment-qr/"+g.q:"";
  if(!SET.gcTry){SET.gcTry=1;hub("rpc/shop_pay_info",{method:"POST",body:"{}"}).then(r=>{SET.gc=r||{};if(step===3&&location.hash.startsWith("#/checkout"))renderCheckout()}).catch(e=>{SET.gc={};console.warn("shop_pay_info",e)})}
@@ -818,7 +818,7 @@ $("newsletterForm").addEventListener("submit",async e=>{
  catch(err){msg.textContent="Couldn’t sign you up just now. Please try again later.";console.error("Newsletter signup failed",err)}
  finally{button.disabled=false;button.textContent="Subscribe"}
 });
-$("year").textContent=new Date().getFullYear()+" · v18c";
+$("year").textContent=new Date().getFullYear()+" · v18d";
 paintMenu();loadMenu();route();
 
 /* ===== Pop-up events: managed from the owner app, loaded live ===== */
@@ -854,7 +854,7 @@ function pill(){let d=$("openPill");if(!d){d=document.createElement("div");d.id=
   else if(SET.sok){t="We’re taking orders!"}
   else return}
  d.innerHTML=`<div class="op ${k}" role="status"><span class="dot"></span><b>${esc(t)}</b>${s?`<span class="sep"></span><span class="tm">${CLK}${esc(s)}</span>`:""}<a href="#menu">${a}</a></div>`}
-function sched(){const s=SET.sch;if(!s||!s.w)return null;const n=new Date(),x=s.x||[],d=s.w[n.getDay()],hm=n.getHours()*60+n.getMinutes(),cx=x.includes(todayISO());
+function sched(){const s=SET.sch;if(!s||!s.w||s.ov)return null;const n=new Date(),x=s.x||[],d=s.w[n.getDay()],hm=n.getHours()*60+n.getMinutes(),cx=x.includes(todayISO());
  if(!cx&&d&&d.on&&hm>=mi(d.f)&&hm<mi(d.t))return{open:true,msg:"We’re taking orders today · until "+t12(d.t)};
  if(!cx&&d&&d.on&&hm<mi(d.f))return{open:false,msg:"Orders open today at "+t12(d.f)};
  for(let i=1;i<=14;i++){const z=new Date(n);z.setDate(n.getDate()+i);const zi=new Date(z.getTime()-z.getTimezoneOffset()*6e4).toISOString().slice(0,10),v=s.w[z.getDay()];if(v&&v.on&&!x.includes(zi))return{open:false,msg:"Not taking orders right now · next: "+DOW[z.getDay()]+" "+t12(v.f)}}
